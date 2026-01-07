@@ -131,22 +131,17 @@ def is_stopped_or_logged_in(line_id, downtimes):
         return is_stopped, is_loggeed_in
     last_downtime = datetime.datetime.strptime(
         line_downtimes[-1]['start_read_datetime'], '%Y-%m-%d %H:%M:%S.%f')
-    print(last_downtime)
+    print(last_downtime,int(line_downtimes[-1]['stop_type']))
     if 'stop_read_datetime' not in line_downtimes[-1] or line_downtimes[-1]['stop_read_datetime'] is None:
-        if int(line_downtimes['stop_type']) != 60 and int(line_downtimes['stop_type']) != 61:
-            is_stopped = True
+        is_stopped = False
     else:
-        last_uptime = datetime.datetime.strptime(
-            line_downtimes[-1]['stop_read_datetime'], '%Y-%m-%d %H:%M:%S.%f')
-        is_stopped = last_downtime > last_uptime
-        print(last_uptime)
-    for i in line_downtimes:
-        print(i)
-        print(i['stop_type'])
-        print(is_stopped, is_loggeed_in)
-        if int(i['stop_type']) == 60 or int(i['stop_type']) == 61:
-            is_loggeed_in = False
-            
+        if int(line_downtimes[-1]['stop_type']) != 60 and int(line_downtimes[-1]['stop_type']) != 61:
+            last_uptime = datetime.datetime.strptime(
+                line_downtimes[-1]['stop_read_datetime'], '%Y-%m-%d %H:%M:%S.%f')
+            is_stopped = last_downtime > last_uptime
+            print(last_uptime)
+    if is_stopped == True and (int(line_downtimes[-1]['stop_type']) == 60 or int(line_downtimes[-1]['stop_type']) == 61):
+        is_loggeed_in = True
     return is_stopped, is_loggeed_in
 
 
