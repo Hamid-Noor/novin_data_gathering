@@ -6,6 +6,7 @@ import time
 import datetime
 import threading
 import subprocess
+import math
 
 # =========================
 # ✅ State per line (11 خط)
