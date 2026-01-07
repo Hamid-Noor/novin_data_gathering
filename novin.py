@@ -917,7 +917,6 @@ def linesDataGatherer(resourceID, HMI_IP, companyID=49):
         else:
             online_attempts[idx] += 1
 
-            # فقط یک بار شروع offline را ثبت کن
             if online_attempts[idx] == 10 and not offline_open[idx]:
                 offline_open[idx] = True
                 offline_begin_time[idx] = now
