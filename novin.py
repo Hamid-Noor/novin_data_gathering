@@ -6,7 +6,6 @@ import time
 import datetime
 import threading
 import subprocess
-import math
 
 # =========================
 # ✅ State per line (11 خط)
@@ -424,20 +423,6 @@ def is_device_reachable_windows(ip, timeout=50):
     except Exception:
         print('error connection:', Exception)
         return False
-
-
-# def is_device_reachable(ip, timeout_ms=50):
-#     try:
-#         timeout_s = max(1, math.ceil(timeout_ms / 1000))
-#         result = subprocess.run(
-#             ["ping", "-c", "1", "-W", str(timeout_s), ip],
-#             stdout=subprocess.DEVNULL,
-#             stderr=subprocess.DEVNULL
-#         )
-#         return result.returncode == 0
-#     except Exception as e:
-#         print("error connection:", e)
-#         return False
 
 
 # ==========================================================
