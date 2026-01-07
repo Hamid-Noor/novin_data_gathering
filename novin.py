@@ -413,31 +413,19 @@ def stop(client: ModbusClient, companyID, resourceID, read_datetime, status: int
     return False
 
 
-def is_device_reachable_windows(ip, timeout=50):
+
+def is_device_reachable(ip, timeout_ms=50):
     try:
+        timeout_s = max(1, math.ceil(timeout_ms / 1000))
         result = subprocess.run(
-            ["ping", "-n", "1", "-w", str(timeout), ip],
+            ["ping", "-c", "1", "-W", str(timeout_s), ip],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
         return result.returncode == 0
-    except Exception:
-        print('error connection:', Exception)
+    except Exception as e:
+        print("error connection:", e)
         return False
-
-
-# def is_device_reachable(ip, timeout_ms=50):
-#     try:
-#         timeout_s = max(1, math.ceil(timeout_ms / 1000))
-#         result = subprocess.run(
-#             ["ping", "-c", "1", "-W", str(timeout_s), ip],
-#             stdout=subprocess.DEVNULL,
-#             stderr=subprocess.DEVNULL
-#         )
-#         return result.returncode == 0
-#     except Exception as e:
-#         print("error connection:", e)
-#         return False
 
 
 # ==========================================================
@@ -453,7 +441,7 @@ def linesDataGatherer(resourceID, HMI_IP, companyID=49):
     while True:
         global online_attempts
         now = str(datetime.datetime.now())
-        reached = is_device_reachable_windows(HMI_IP)
+        reached = is_device_reachable(HMI_IP)
 
         if reached:
             # اگر قبلش offline بوده، اینجا offline رو می‌بندیم
@@ -500,22 +488,18 @@ def linesDataGatherer(resourceID, HMI_IP, companyID=49):
 
 
 
-# factory_lines = []
-# for i in range(10, 21):
-#     factory_lines.append((i, f"10.9.41.{i}"))
+factory_lines = []
+for i in range(10, 21):
+    factory_lines.append((i, f"10.9.41.{i}"))
 
-# if __name__ == "__main__":
-#     threads = []
-#     for line in factory_lines:
-#         t = threading.Thread(target=linesDataGatherer,
-#                              args=(line[0]-9, line[1]))
-#         threads.append(t)
-#         t.start()
+if __name__ == "__main__":
+    threads = []
+    for line in factory_lines:
+        t = threading.Thread(target=linesDataGatherer,
+                             args=(line[0]-9, line[1]))
+        threads.append(t)
+        t.start()
 
-# for thread in threads:
-#     thread.join()
+for thread in threads:
+    thread.join()
 
-# تست تک خط:
-t = threading.Thread(target=linesDataGatherer, args=(2, '10.17.2.49'))
-t.start()
-t.join()
