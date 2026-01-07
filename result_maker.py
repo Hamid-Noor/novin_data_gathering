@@ -212,7 +212,7 @@ def qc_downtime_tabs_payload(downtimes, line_ids, now):
     labels = [f"IM-{i}" for i in line_ids]
 
     # ✅ بهینه‌تر: فقط یک بار event ها را بساز
-    events = dp.build_events(downtimes, include_open=True, now=now, stop_type_optional_if_zero=True)
+    events = dp.build_events(downtimes, include_open=True, now=now)
 
     events_by_line = defaultdict(list)
     for e in events:
@@ -386,7 +386,7 @@ def main():
 
             # ✅ downtime با منطق جدید parser (start_read_datetime + auto-close/fallback)
             line['downtime'] = dp.downtime_minutes_current_shift(
-                line['id'], downtimes, now=now, stop_type_optional_if_zero=True)
+                line['id'], downtimes, now=now)
 
             # print(line)
 
